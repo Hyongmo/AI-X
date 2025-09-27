@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국내 수산 분야 AI 활용 현황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            padding: 2vh 2.5vw;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2vh;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1vw;
+            flex: 1;
+            height: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 0.05vw solid rgba(255, 255, 255, 0.1);
+            border-radius: 1vw;
+            padding: 1.2vh 1.2vw;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(1vh);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(74, 158, 255, 0.5);
+            transform: translateY(-0.25vh) scale(1.02);
+            box-shadow: 0 1vh 2vh rgba(74, 158, 255, 0.2);
+        }
+
+        .card-icon {
+            width: 2.3vw;
+            height: 2.3vw;
+            background: linear-gradient(135deg, #4a9eff 0%, #00d4ff 100%);
+            border-radius: 0.6vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1vh;
+            font-size: 1.2vw;
+        }
+
+        .card-title {
+            font-size: 1vw;
+            font-weight: 600;
+            color: #4a9eff;
+            margin-bottom: 0.7vh;
+            line-height: 1.3;
+        }
+
+        .card-content {
+            font-size: 0.87vw;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            flex: 1;
+        }
+
+        .card-with-image {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-with-image .content-wrapper {
+            display: flex;
+            gap: 1vw;
+            flex: 1;
+        }
+
+        .card-with-image .text-section {
+            flex: 1;
+        }
+
+        .card-with-image .image-section {
+            width: 25vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-with-image .image-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.6vw;
+            box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            max-width: 100%;
+        }
+
+        .card:hover .image-section img {
+            transform: scale(1.05);
+            box-shadow: 0 0.4vh 1.2vh rgba(74, 158, 255, 0.3);
+        }
+
+        .highlight {
+            color: #00d4ff;
+            font-weight: 500;
+        }
+
+        .large-card {
+            grid-column: span 2;
+        }
+
+        .large-card .content-wrapper {
+            height: 100%;
+        }
+
+        .large-card .image-section {
+            width: 35vw;
+        }
+
+        .pulse-dot {
+            position: absolute;
+            top: 1.2vh;
+            right: 1.2vw;
+            width: 0.4vw;
+            height: 0.4vw;
+            min-width: 8px;
+            min-height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+            }
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 0.5vw rgba(0, 255, 136, 0);
+            }
+        }
+
+        .card:nth-child(1) {
+            animation: slideInUp 0.8s ease-out 0.2s forwards;
+        }
+        .card:nth-child(2) {
+            animation: slideInUp 0.8s ease-out 0.4s forwards;
+        }
+        .card:nth-child(3) {
+            animation: slideInUp 0.8s ease-out 0.6s forwards;
+        }
+        .card:nth-child(4) {
+            animation: slideInUp 0.8s ease-out 0.8s forwards;
+        }
+        .card:nth-child(5) {
+            animation: slideInUp 0.8s ease-out 1s forwards;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 0.2vh 0.6vw;
+            background: rgba(74, 158, 255, 0.2);
+            border: 0.05vw solid rgba(74, 158, 255, 0.3);
+            border-radius: 1vw;
+            font-size: 0.68vw;
+            margin-top: 0.6vh;
+            margin-right: 0.4vw;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 0.15vh;
+            min-height: 3px;
+            background: linear-gradient(90deg, #4a9eff 0%, #00d4ff 100%);
+            animation: progressAnimation 3s ease-out;
+        }
+
+        @keyframes progressAnimation {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .bullet-list {
+            margin-top: 0.7vh;
+        }
+
+        .bullet-list div {
+            margin-bottom: 0.4vh;
+            font-size: 0.87vw;
+        }
+
+        /* 반응형 최소값 보장 */
+        @media (max-width: 2064px) or (max-height: 1032px) {
+            .card-icon {
+                width: max(2.3vw, 48px);
+                height: max(2.3vw, 48px);
+                font-size: max(1.2vw, 24px);
+            }
+            .card-title {
+                font-size: max(1vw, 20px);
+            }
+            .card-content {
+                font-size: max(0.87vw, 18px);
+            }
+            .tech-badge {
+                font-size: max(0.68vw, 14px);
+                padding: max(0.2vh, 4px) max(0.6vw, 12px);
+            }
+            .bullet-list div {
+                font-size: max(0.87vw, 18px);
+            }
+            .slide-container {
+                padding: max(2vh, 40px) max(2.5vw, 50px);
+                gap: max(1.2vh, 25px);
+            }
+            .content-grid {
+                gap: max(1vw, 20px);
+            }
+            .card {
+                padding: max(1.2vh, 25px) max(1.2vw, 25px);
+                border-radius: max(1vw, 20px);
+            }
+        }
+
+        /* 4K 해상도 최적화 */
+        @media (min-width: 4128px) and (min-height: 2064px) {
+            .card-icon {
+                width: 95px;
+                height: 95px;
+                border-radius: 25px;
+                font-size: 50px;
+                margin-bottom: 20px;
+            }
+            .card-title {
+                font-size: 41px;
+                margin-bottom: 15px;
+            }
+            .card-content {
+                font-size: 36px;
+            }
+            .card-with-image .image-section {
+                width: 1030px;
+            }
+            .large-card .image-section {
+                width: 1445px;
+            }
+            .highlight {
+                font-weight: 600;
+            }
+            .tech-badge {
+                font-size: 28px;
+                padding: 8px 25px;
+                border-radius: 40px;
+                margin-top: 12px;
+                margin-right: 16px;
+                border-width: 2px;
+            }
+            .pulse-dot {
+                width: 16px;
+                height: 16px;
+                top: 25px;
+                right: 50px;
+            }
+            .progress-bar {
+                height: 6px;
+            }
+            .bullet-list {
+                margin-top: 30px;
+            }
+            .bullet-list div {
+                margin-bottom: 16px;
+                font-size: 36px;
+            }
+            .slide-container {
+                padding: 80px 100px;
+                gap: 50px;
+            }
+            .content-grid {
+                gap: 40px;
+            }
+            .card {
+                padding: 50px;
+                border-radius: 40px;
+                border-width: 2px;
+            }
+            .card-with-image .content-wrapper {
+                gap: 40px;
+            }
+            .card-with-image .image-section img {
+                border-radius: 25px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            }
+            .card:hover .image-section img {
+                box-shadow: 0 16px 48px rgba(74, 158, 255, 0.3);
+            }
+            .card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 40px 80px rgba(74, 158, 255, 0.2);
+            }
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes pulse {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+                }
+                50% {
+                    box-shadow: 0 0 0 20px rgba(0, 255, 136, 0);
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="content-grid">
+            <div class="card">
+                <div class="pulse-dot"></div>
+                <div class="card-icon">🐟</div>
+                <div class="card-title">스마트 양식</div>
+                <div class="card-content">
+                    <div><span class="highlight">AI 기반</span> 양식장 환경 모니터링</div>
+                    <div>자동 먹이 공급 · 어류 건강 관리</div>
+                    <div style="margin-top: 10px;">국립수산과학원 테스트베드<br>(진해, 포항)</div>
+                </div>
+                <div class="tech-badge">수질 센서</div>
+                <div class="tech-badge">영상 분석</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">AI 기반 스마트 어업 관리</div>
+                <div class="card-content">
+                    <div><span class="highlight">TAC 대상종</span> 조업 정보 분석</div>
+                    <div>120개 위판장 정보 통합</div>
+                    <div style="margin-top: 10px;">자원 관리 효율화</div>
+                </div>
+                <div class="tech-badge">빅데이터 분석</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🔬</div>
+                <div class="card-title">원산지 판별 기계학습</div>
+                <div class="card-content">
+                    <div><span class="highlight">DNA 바코드</span> 분석 자동화</div>
+                    <div>분석 시간 50% 단축</div>
+                    <div style="margin-top: 10px;">젓새우 등 수산물 신속 판별</div>
+                </div>
+                <div class="tech-badge">머신러닝</div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <div class="card large-card card-with-image">
+                <div class="pulse-dot"></div>
+                <div class="card-icon">🏭</div>
+                <div class="card-title">디지털 트윈 기반 아쿠아팜</div>
+                <div class="content-wrapper">
+                    <div class="text-section">
+                        <div class="card-content">
+                            <div><span class="highlight">가상 환경</span>에서 양식장 실시간 모니터링 및 시뮬레이션</div>
+                            <div class="bullet-list">
+                                <div>• 사육 환경 자동 모니터링</div>
+                                <div>• 에너지 절감 최적화</div>
+                                <div>• 생산량 예측 · 질병 관리</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-section">
+                        <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/아쿠아팜%20에너지%20모델링.png" 
+                             alt="아쿠아팜 에너지 모델링">
+                    </div>
+                </div>
+                <div class="progress-bar"></div>
+            </div>
+
+            <div class="card card-with-image">
+                <div class="card-icon">🛒</div>
+                <div class="card-title">AI 수산물 유통 시스템</div>
+                <div class="content-wrapper">
+                    <div class="text-section">
+                        <div class="card-content">
+                            <div><span class="highlight">수입수산물</span> 유통정보</div>
+                            <div>스마트 구매 플랫폼</div>
+                        </div>
+                    </div>
+                    <div class="image-section">
+                        <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/seaching.png" 
+                             alt="AI 수산물 유통 시스템">
+                    </div>
+                </div>
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

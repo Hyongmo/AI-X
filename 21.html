@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI 기반 데이터 연결</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0f1b 0%, #0f1929 100%);
+            color: #ffffff;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 95%;
+            height: 90vh;
+            max-width: 1920px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+        }
+
+        /* 상단 문제 영역 */
+        .problem-section {
+            height: 35%;
+            display: flex;
+            gap: 3vw;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .problem-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 2vw;
+        }
+
+        .problem-title {
+            font-size: clamp(20px, 1.6vw, 32px);
+            color: #ff6b6b;
+            margin-bottom: 1.5vh;
+            font-weight: 700;
+        }
+
+        .problem-list {
+            font-size: clamp(15px, 1.2vw, 24px);
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .problem-list li {
+            list-style: none;
+            margin-bottom: 0.8vh;
+            padding-left: 2vw;
+            position: relative;
+            opacity: 0;
+            animation: slideRight 0.6s ease-out forwards;
+        }
+
+        .problem-list li:nth-child(1) { animation-delay: 0.3s; }
+        .problem-list li:nth-child(2) { animation-delay: 0.5s; }
+        .problem-list li:nth-child(3) { animation-delay: 0.7s; }
+        .problem-list li:nth-child(4) { animation-delay: 0.9s; }
+
+        .problem-list li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            font-size: clamp(15px, 1.2vw, 24px);
+        }
+
+        /* 분산된 데이터 시각화 */
+        .scattered-data {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data-node {
+            position: absolute;
+            background: rgba(255, 107, 107, 0.1);
+            border: 0.1vw solid rgba(255, 107, 107, 0.5);
+            border-radius: min(1vw, 12px);
+            padding: min(1vw, 16px) min(1.5vw, 24px);
+            font-size: clamp(12px, 0.9vw, 18px);
+            font-weight: 500;
+            animation: float 4s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        .data-node:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .data-node:nth-child(2) { top: 5%; right: 15%; animation-delay: 0.5s; }
+        .data-node:nth-child(3) { bottom: 20%; left: 5%; animation-delay: 1s; }
+        .data-node:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 1.5s; }
+        .data-node:nth-child(5) { top: 50%; left: 30%; animation-delay: 2s; }
+
+        /* 중간 화살표 */
+        .arrow-section {
+            height: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+        }
+
+        .arrow-down {
+            font-size: clamp(30px, 2.4vw, 48px);
+            color: #4fc3f7;
+            animation: bounce 2s infinite;
+        }
+
+        /* 하단 솔루션 영역 */
+        .solution-section {
+            height: 50%;
+            position: relative;
+            background: rgba(79, 195, 247, 0.05);
+            border: 0.1vw solid rgba(79, 195, 247, 0.3);
+            border-radius: min(1.5vw, 20px);
+            padding: min(2.5vw, 40px);
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 1s forwards;
+            opacity: 0;
+        }
+
+        /* AI 프로세스 플로우 */
+        .ai-process {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1.5vw;
+        }
+
+        .process-step {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-icon {
+            width: min(6vw, 120px);
+            height: min(6vw, 120px);
+            background: linear-gradient(135deg, #1565c0 0%, #42a5f5 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(24px, 2.4vw, 48px);
+            margin-bottom: 1.5vh;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .step-title {
+            font-size: clamp(14px, 1.2vw, 24px);
+            font-weight: 700;
+            color: #4fc3f7;
+            margin-bottom: 0.8vh;
+            text-align: center;
+        }
+
+        .step-desc {
+            font-size: clamp(11px, 0.9vw, 18px);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* 연결선 */
+        .connector {
+            position: absolute;
+            top: 35%;
+            width: 100%;
+            height: 0.1vw;
+            min-height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #4fc3f7 20%, 
+                #4fc3f7 80%, 
+                transparent 100%);
+            z-index: -1;
+            opacity: 0;
+            animation: expandWidth 1s ease-out 2s forwards;
+        }
+
+        /* 데이터 플로우 효과 */
+        .data-flow {
+            position: absolute;
+            width: 0.4vw;
+            height: 0.4vw;
+            min-width: 6px;
+            min-height: 6px;
+            background: #ffd93d;
+            border-radius: 50%;
+            top: 34%;
+            left: 0;
+            opacity: 0;
+            animation: flowData 3s linear 3s infinite;
+        }
+
+        /* 결과 하이라이트 */
+        .result-highlight {
+            position: absolute;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd93d, #ffeb3b);
+            color: #0a0f1b;
+            padding: min(1.2vw, 19px) min(3vw, 48px);
+            border-radius: min(2.5vw, 50px);
+            font-size: clamp(13px, 1.1vw, 22px);
+            font-weight: 700;
+            box-shadow: 0 0 2vw rgba(255, 215, 61, 0.5);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 3s forwards;
+            white-space: nowrap;
+        }
+
+        /* 파티클 효과 */
+        .particle {
+            position: absolute;
+            width: 0.2vw;
+            height: 0.2vw;
+            min-width: 3px;
+            min-height: 3px;
+            background: rgba(79, 195, 247, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 애니메이션 정의 */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-2vh); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(2vh); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-2vw); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translate(-50%, 1vh); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-1vh) rotate(5deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-1vh); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 1.5vw rgba(79, 195, 247, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 2.5vw rgba(79, 195, 247, 0.8); }
+        }
+
+        @keyframes expandWidth {
+            from { width: 0; opacity: 0; }
+            to { width: 100%; opacity: 1; }
+        }
+
+        @keyframes flowData {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: calc(100% - 0.4vw); opacity: 0; }
+        }
+
+        /* 글로우 효과 */
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30vw;
+            height: 30vw;
+            max-width: 600px;
+            max-height: 600px;
+            background: radial-gradient(circle, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* 반응형 조정 */
+        @media (max-width: 2064px) {
+            .problem-title {
+                font-size: clamp(18px, 1.5vw, 28px);
+            }
+            
+            .problem-list {
+                font-size: clamp(13px, 1.1vw, 20px);
+            }
+            
+            .step-title {
+                font-size: clamp(12px, 1.1vw, 20px);
+            }
+            
+            .step-desc {
+                font-size: clamp(10px, 0.8vw, 16px);
+            }
+        }
+
+        @media (max-width: 1440px) {
+            .container {
+                gap: 1vh;
+            }
+            
+            .data-node {
+                font-size: clamp(10px, 0.8vw, 14px);
+                padding: min(0.8vw, 12px) min(1.2vw, 18px);
+            }
+            
+            .step-icon {
+                width: min(7vw, 100px);
+                height: min(7vw, 100px);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .problem-section {
+                flex-direction: column;
+                height: 40%;
+            }
+            
+            .scattered-data {
+                min-height: 150px;
+            }
+            
+            .ai-process {
+                gap: 1vw;
+            }
+            
+            .result-highlight {
+                font-size: clamp(11px, 2vw, 18px);
+                padding: 0.8vw 2vw;
+            }
+        }
+
+        /* 초고해상도 대응 */
+        @media (min-width: 3840px) {
+            .container {
+                max-width: 3600px;
+            }
+            
+            .problem-title {
+                font-size: clamp(32px, 1.2vw, 42px);
+            }
+            
+            .step-title {
+                font-size: clamp(20px, 0.9vw, 30px);
+            }
+            
+            .result-highlight {
+                font-size: clamp(18px, 0.8vw, 28px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 상단: 문제 제기 -->
+        <div class="problem-section">
+            <div class="problem-text">
+                <h2 class="problem-title">🔴 데이터 연결의 현실적 어려움</h2>
+                <ul class="problem-list">
+                    <li>분산된 데이터, 다른 표준</li>
+                    <li>수준과 수집 빈도의 차이</li>
+                    <li>데이터 맥락 파악의 어려움</li>
+                    <li>지속적 연결 유지의 한계</li>
+                </ul>
+            </div>
+            
+            <div class="scattered-data">
+                <div class="data-node">📊 항만 데이터</div>
+                <div class="data-node">🌊 해양 환경</div>
+                <div class="data-node">🐟 수산 자원</div>
+                <div class="data-node">🚢 선박 정보</div>
+                <div class="data-node">📈 통계 자료</div>
+                <div class="data-node" style="top: 35%; right: 5%; animation-delay: 0.7s;">🏛️ 지자체 자료</div>
+                <div class="data-node" style="bottom: 45%; right: 35%; animation-delay: 1.3s;">🏢 민간 자료</div>
+            </div>
+        </div>
+
+        <!-- 중간: 전환 화살표 -->
+        <div class="arrow-section">
+            <div class="arrow-down">⬇️</div>
+        </div>
+
+        <!-- 하단: AI 솔루션 -->
+        <div class="solution-section">
+            <div class="glow"></div>
+            
+            <div class="ai-process">
+                <div class="process-step">
+                    <div class="step-icon">📚</div>
+                    <h3 class="step-title">다양한 플랫폼<br>데이터 수집</h3>
+                    <p class="step-desc">해양수산 분야<br>공공&민간 데이터</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-icon">🔄</div>
+                    <h3 class="step-title">임베딩 &<br>벡터화</h3>
+                    <p class="step-desc">생성형 AI로<br>데이터 변환</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-icon">🧠</div>
+                    <h3 class="step-title">RAG<br>지식체계</h3>
+                    <p class="step-desc">해양수산 특화<br>지식베이스 구축</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-icon">🔗</div>
+                    <h3 class="step-title">생성형 AI 기반<br>데이터 연결</h3>
+                    <p class="step-desc">데이터 연결 및<br>검색 강화</p>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+            <div class="data-flow"></div>
+            
+            <div class="result-highlight">
+                ✨ 표준·양식·구조 차이를 극복하는 지능형 연결
+            </div>
+        </div>
+    </div>
+
+    <!-- 파티클 효과 -->
+    <script>
+        // 동적 파티클 생성
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        // 주기적으로 파티클 생성
+        setInterval(createParticle, 500);
+    </script>
+
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END --> 
+</body>
+</html>

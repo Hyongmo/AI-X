@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해운분야 AI 활용 현황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 2.9vh 2.9vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-section {
+            flex: 0.45;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            padding: 1.9vh 1.9vw;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-title {
+            display: none;
+        }
+
+        .content-grid {
+            display: grid;
+            gap: 1.2vh;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+
+        .content-item {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 0.05vw solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.8vw;
+            padding: 1.4vh 1.4vw;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0.4vh 1.5vh rgba(0, 0, 0, 0.2);
+        }
+
+        .content-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(0.4vw) translateY(-0.2vh);
+            border-color: rgba(100, 181, 246, 0.4);
+            box-shadow: 0 0.8vh 2.3vh rgba(100, 181, 246, 0.15);
+        }
+
+        .content-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0.2vw;
+            height: 100%;
+            background: linear-gradient(to bottom, #64b5f6, #42a5f5);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .content-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .category-title {
+            font-size: 1vw;
+            font-weight: 700;
+            color: #81c784;
+            margin-bottom: 0.8vh;
+            display: flex;
+            align-items: center;
+            gap: 0.6vw;
+            letter-spacing: -0.015vw;
+        }
+
+        .category-icon {
+            width: 1.2vw;
+            height: 1.2vw;
+            background: linear-gradient(135deg, #81c784, #66bb6a);
+            border-radius: 0.3vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6vw;
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 0.2vh 0.6vh rgba(129, 199, 132, 0.3);
+        }
+
+        .content-text {
+            font-size: 0.87vw;
+            line-height: 1.7;
+            color: #f8fafc;
+            font-weight: 400;
+            letter-spacing: -0.01vw;
+        }
+
+        .highlight {
+            color: #ffa726;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffa726, #ff9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .company-highlight {
+            color: #64b5f6;
+            font-weight: 600;
+            background: linear-gradient(135deg, #64b5f6, #42a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .image-container {
+            border-radius: 0.8vw;
+            overflow: hidden;
+            box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(1.5vh);
+        }
+
+        .image-container:first-child {
+            animation: slideInRight 1s ease-out 0.9s forwards;
+        }
+
+        .image-container:last-child {
+            animation: slideInRight 1s ease-out 1.2s forwards;
+        }
+
+        .image-container:hover {
+            transform: translateY(-0.25vh) scale(1.02);
+            box-shadow: 0 1.2vh 2.4vh rgba(100, 181, 246, 0.2);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 0.2vw;
+            height: 0.2vw;
+            min-width: 4px;
+            min-height: 4px;
+            background: rgba(100, 181, 246, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 60%; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { top: 40%; left: 80%; animation-delay: 4s; }
+        .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(5) { top: 30%; left: 60%; animation-delay: 3s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-2.4vw);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateY(1.5vh);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(1.5vh);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-1vh) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        /* 반응형 최소값 보장 */
+        @media (max-width: 2064px) or (max-height: 1032px) {
+            .content-section {
+                padding: max(2.9vh, 60px) max(2.9vw, 60px);
+            }
+            .image-section {
+                padding: max(1.9vh, 40px) max(1.9vw, 40px);
+                gap: max(1.5vh, 30px);
+            }
+            .content-grid {
+                gap: max(1.2vh, 25px);
+            }
+            .content-item {
+                padding: max(1.4vh, 28px) max(1.4vw, 28px);
+                border-radius: max(0.8vw, 16px);
+            }
+            .category-title {
+                font-size: max(1vw, 20px);
+                gap: max(0.6vw, 12px);
+            }
+            .category-icon {
+                width: max(1.2vw, 24px);
+                height: max(1.2vw, 24px);
+                font-size: max(0.6vw, 12px);
+            }
+            .content-text {
+                font-size: max(0.87vw, 18px);
+            }
+        }
+
+        /* 4K 해상도 최적화 */
+        @media (min-width: 4128px) and (min-height: 2064px) {
+            .content-section {
+                padding: 120px;
+            }
+            .image-section {
+                padding: 80px;
+                gap: 60px;
+            }
+            .content-grid {
+                gap: 50px;
+            }
+            .content-item {
+                background: rgba(255, 255, 255, 0.06);
+                border-width: 2px;
+                border-radius: 32px;
+                padding: 56px;
+                box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
+            }
+            .content-item:hover {
+                transform: translateX(16px) translateY(-8px);
+                box-shadow: 0 32px 96px rgba(100, 181, 246, 0.15);
+            }
+            .content-item::before {
+                width: 8px;
+            }
+            .category-title {
+                font-size: 40px;
+                margin-bottom: 32px;
+                gap: 24px;
+                letter-spacing: -0.6px;
+            }
+            .category-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                font-size: 24px;
+                box-shadow: 0 8px 24px rgba(129, 199, 132, 0.3);
+            }
+            .content-text {
+                font-size: 36px;
+                letter-spacing: -0.4px;
+            }
+            .image-container {
+                border-radius: 32px;
+                box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            }
+            .image-container:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 50px 100px rgba(100, 181, 246, 0.2);
+            }
+            .particle {
+                width: 8px;
+                height: 8px;
+            }
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateY(60px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(60px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px) rotate(0deg);
+                    opacity: 0.6;
+                }
+                50% {
+                    transform: translateY(-40px) rotate(180deg);
+                    opacity: 1;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="slide-container">
+        <div class="content-section">
+            <div class="content-grid">
+                <div class="content-item">
+                    <div class="category-title">
+                        <div class="category-icon">1</div>
+                        스마트 선박 및 운항관리
+                    </div>
+                    <div class="content-text">
+                        • <span class="company-highlight">현대중공업·삼성중공업</span> 자율운항 선박 및 스마트 선박 플랫폼 개발<br>
+                        • <span class="highlight">HiMSEN 엔진</span> AI 기반 실시간 모니터링 시스템 적용<br>
+                        • 연료 절감 및 운항 안전성 강화
+                    </div>
+                </div>
+
+                <div class="content-item">
+                    <div class="category-title">
+                        <div class="category-icon">2</div>
+                        AI 기반 물류 최적화
+                    </div>
+                    <div class="content-text">
+                        • <span class="company-highlight">HMM</span> 기계학습 기반 물류 흐름 분석 시스템 도입<br>
+                        • 실시간 물류 데이터 분석을 통한 <span class="highlight">최적 운송 경로</span> 제안<br>
+                        • 공급망 변동성 대응 및 운송 시간 단축·비용 절감 실현
+                    </div>
+                </div>
+
+                <div class="content-item">
+                    <div class="category-title">
+                        <div class="category-icon">3</div>
+                        친환경 AI 기술 도입
+                    </div>
+                    <div class="content-text">
+                        • <span class="company-highlight">현대미포조선</span> AI 기반 친환경 선박 개발<br>
+                        • <span class="highlight">배출가스 모니터링 시스템</span> 도입으로 국제환경 규제 대응<br>
+                        • AI 연료 효율 극대화를 통한 환경 보호·비용 절감 동시 실현
+                    </div>
+                </div>
+
+                <div class="content-item">
+                    <div class="category-title">
+                        <div class="category-icon">4</div>
+                        부산 기업 혁신 사례
+                    </div>
+                    <div class="content-text">
+                        • <span class="company-highlight">맵시(MAPSEA)</span> AI 기반 실시간 항해안전 네비게이션 시스템<br>
+                        • <span class="company-highlight">랩오투원</span> 선박 탄소배출량 실시간 측정 및 모니터링 서비스<br>
+                        • <span class="highlight">국제규제 대응 지원</span> 및 해운업계 디지털 혁신 주도
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-section">
+            <div class="image-container">
+                <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/스마트해운혁신.png" alt="스마트 해운 혁신" />
+            </div>
+            
+            <div class="image-container">
+                <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/탄소배출모니터링.png" alt="탄소배출 모니터링" />
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

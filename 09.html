@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양 분야 AI 활용 현황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 3vh 3vw;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2vw;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 1vw;
+        }
+        
+        .main-title {
+            font-size: 2.2vw;
+            font-weight: 700;
+            margin-bottom: 2.5vh;
+            background: linear-gradient(90deg, #64b5f6 0%, #42a5f5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slideInLeft 0.8s ease-out;
+            line-height: 1.2;
+        }
+        
+        .content-block {
+            margin-bottom: 2vh;
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        .content-block h3 {
+            font-size: 1.3vw;
+            font-weight: 600;
+            color: #64b5f6;
+            margin-bottom: 1vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .content-block h3::before {
+            content: '▸';
+            margin-right: 0.5vw;
+            color: #42a5f5;
+            animation: pulse 2s infinite;
+        }
+        
+        .content-text {
+            font-size: 0.95vw;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-bottom: 0.7vh;
+            padding-left: 1.5vw;
+            opacity: 0.95;
+        }
+        
+        .highlight-box {
+            background: rgba(66, 165, 245, 0.1);
+            border-left: 0.2vw solid #42a5f5;
+            padding: 1.5vh 1vw;
+            margin-top: 2vh;
+            border-radius: 0.4vw;
+            animation: fadeIn 1.2s ease-out;
+        }
+        
+        .highlight-box p {
+            font-size: 0.95vw;
+            line-height: 1.6;
+            color: #b3d4fc;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8vh;
+            justify-content: center;
+            padding: 1vw;
+        }
+        
+        .image-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 0.1vw solid rgba(100, 181, 246, 0.3);
+            border-radius: 0.6vw;
+            padding: 1vh 1vw;
+            height: 23vh;
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+            transition: all 0.3s ease;
+            animation: slideInRight 1s ease-out;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-card img {
+            height: 100%;
+            width: auto;
+            max-width: 60%;
+            object-fit: contain;
+            border-radius: 0.4vw;
+            opacity: 0.95;
+        }
+        
+        .image-label {
+            flex: 1;
+            font-size: 1vw;
+            color: #90caf9;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .image-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(-0.3vw);
+            box-shadow: 0 0.5vw 1.5vw rgba(66, 165, 245, 0.2);
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            background: rgba(66, 165, 245, 0.2);
+            color: #90caf9;
+            padding: 0.3vh 0.6vw;
+            border-radius: 1vw;
+            font-size: 0.75vw;
+            margin-right: 0.4vw;
+            margin-top: 0.5vh;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .floating-element {
+            position: absolute;
+            width: 15vw;
+            height: 15vw;
+            background: radial-gradient(circle, rgba(66, 165, 245, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .floating-element-1 {
+            top: -7.5vw;
+            right: -7.5vw;
+        }
+        
+        .floating-element-2 {
+            bottom: -7.5vw;
+            left: -7.5vw;
+            animation-delay: 3s;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-2.5vw);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(2.5vw);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-1vh) scale(1.05);
+            }
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4vw;
+            font-size: 0.75vw;
+            color: #ffa726;
+            background: rgba(255, 167, 38, 0.1);
+            padding: 0.3vh 0.7vw;
+            border-radius: 1vw;
+            margin-top: 0.8vh;
+        }
+        
+        .status-indicator::before {
+            content: '◉';
+            color: #ffa726;
+            animation: pulse 2s infinite;
+        }
+        
+        /* 반응형 최소값 보장 - 낮은 해상도 */
+        @media (max-width: 2064px) or (max-height: 1032px) {
+            .main-title { 
+                font-size: max(2.2vw, 24px);
+                margin-bottom: max(2.5vh, 25px);
+            }
+            .content-block h3 { 
+                font-size: max(1.3vw, 16px);
+                margin-bottom: max(1vh, 10px);
+            }
+            .content-text { 
+                font-size: max(0.95vw, 12px);
+                padding-left: max(1.5vw, 20px);
+                margin-bottom: max(0.7vh, 8px);
+            }
+            .highlight-box {
+                padding: max(1.5vh, 15px) max(1vw, 15px);
+                margin-top: max(2vh, 20px);
+            }
+            .highlight-box p { 
+                font-size: max(0.95vw, 13px);
+            }
+            .image-card {
+                height: max(23vh, 160px);
+                padding: max(1vh, 10px) max(1vw, 15px);
+                gap: max(1vw, 15px);
+            }
+            .image-label { 
+                font-size: max(1vw, 12px);
+            }
+            .tech-badge { 
+                font-size: max(0.75vw, 10px);
+                padding: max(0.3vh, 4px) max(0.6vw, 8px);
+            }
+            .status-indicator { 
+                font-size: max(0.75vw, 10px);
+                padding: max(0.3vh, 4px) max(0.7vw, 10px);
+            }
+            .right-section {
+                gap: max(1.8vh, 20px);
+            }
+            .slide {
+                padding: max(3vh, 40px) max(3vw, 40px);
+                gap: max(2vw, 30px);
+            }
+        }
+        
+        /* 4K 해상도 최적화 */
+        @media (min-width: 4128px) and (min-height: 2064px) {
+            .main-title { 
+                font-size: 90px;
+                margin-bottom: 50px;
+            }
+            .content-block {
+                margin-bottom: 40px;
+            }
+            .content-block h3 { 
+                font-size: 54px;
+                margin-bottom: 20px;
+            }
+            .content-block h3::before {
+                margin-right: 20px;
+            }
+            .content-text { 
+                font-size: 40px;
+                padding-left: 60px;
+                margin-bottom: 15px;
+            }
+            .highlight-box {
+                padding: 30px 40px;
+                margin-top: 40px;
+                border-radius: 16px;
+                border-left-width: 8px;
+            }
+            .highlight-box p { 
+                font-size: 40px;
+            }
+            .image-card {
+                height: 475px;
+                padding: 20px 40px;
+                gap: 40px;
+                border-radius: 25px;
+                border-width: 4px;
+            }
+            .image-label { 
+                font-size: 41px;
+            }
+            .tech-badge { 
+                font-size: 31px;
+                padding: 8px 25px;
+                border-radius: 40px;
+                margin-right: 16px;
+                margin-top: 10px;
+            }
+            .status-indicator { 
+                font-size: 31px;
+                padding: 8px 29px;
+                gap: 16px;
+                border-radius: 40px;
+                margin-top: 16px;
+            }
+            .right-section {
+                gap: 40px;
+                padding: 40px;
+            }
+            .slide {
+                padding: 120px;
+                gap: 80px;
+            }
+            .floating-element {
+                width: 620px;
+                height: 620px;
+            }
+            .floating-element-1 {
+                top: -310px;
+                right: -310px;
+            }
+            .floating-element-2 {
+                bottom: -310px;
+                left: -310px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-element floating-element-1"></div>
+    <div class="floating-element floating-element-2"></div>
+    
+    <div class="slide">
+        <div class="left-section">
+            <h1 class="main-title">국내 해양 분야 AI 활용 현황</h1>
+            
+            <div class="content-block">
+                <h3>해양환경 모니터링 및 분석</h3>
+                <p class="content-text">• AI 활용 해양환경 및 해양공간 분석 기술 개발 진행</p>
+                <p class="content-text">• 데브구루-동아시아바다공동체 오션: AI 해양쓰레기 자동 탐지 시스템 (2023)</p>
+                <p class="content-text">• 포어시스-부산시: AI 기반 하천 부유 쓰레기 통합 수거 관리 시스템 (2022)</p>
+            </div>
+            
+            <div class="content-block">
+                <h3>해양안전 운항 지원 시스템</h3>
+                <p class="content-text">• 해양교통안전공단 MTIS: 연근해 선박 밀집도 및 사고 위험 실시간 알림</p>
+                <p class="content-text">• 해양수산빅데이터플랫폼: AI 기반 분석 기능 통합 제공</p>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>현황 진단:</strong> 해양 산업 AI 활용은 아직 기초 단계로, 구체적 정책 적용에 한계 존재</p>
+                <p style="margin-top: 0.5vh;"><strong>향후 과제:</strong> 해양이용협의, 공유수면 관리, 해양 교육 등 확대 적용 연구 필요</p>
+            </div>
+            
+            <div style="display: flex; gap: 0.5vw; margin-top: 1vh;">
+                <span class="tech-badge">머신러닝</span>
+                <span class="tech-badge">컴퓨터비전</span>
+                <span class="tech-badge">빅데이터</span>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="image-card" style="animation-delay: 0.2s;">
+                <div class="image-label">
+                    해양쓰레기<br>자동 탐지 분석<br>
+                    <span class="status-indicator">실증 운영 중</span>
+                </div>
+                <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/해양쓰레기자동탐지.png" alt="해양쓰레기 탐지">
+            </div>
+            
+            <div class="image-card" style="animation-delay: 0.4s;">
+                <div class="image-label">
+                    AI 기반 하천<br>부유 쓰레기<br>통합 관리<br>
+                    <span class="status-indicator">구축 완료</span>
+                </div>
+                <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/쓰레기통합수거.png" alt="하천 쓰레기 관리">
+            </div>
+            
+            <div class="image-card" style="animation-delay: 0.6s;">
+                <div class="image-label">
+                    선박안전운항<br>정보 시스템<br>(MTIS)<br>
+                    <span class="status-indicator">서비스 운영 중</span>
+                </div>
+                <img src="https://raw.githubusercontent.com/Hyongmo/busan-ocean-ai-images/main/선박안전운항정보시스템.png" alt="선박안전운항">
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

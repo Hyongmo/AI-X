@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양수산 AI 전환의 어려움</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: #0a0f1b;
+            color: #ffffff;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 배경 효과 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse at 20% 30%, rgba(0, 153, 255, 0.1) 0%, transparent 40%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 70% 70%, rgba(0, 212, 255, 0.05) 0%, transparent 35%),
+                radial-gradient(circle at 30% 80%, rgba(255, 107, 107, 0.05) 0%, transparent 30%);
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            padding: min(3%, 30px) min(4%, 40px);
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: min(3%, 30px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 왼쪽 섹션 - 공통 장애요인 */
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .section-header {
+            margin-bottom: min(2.5vh, 25px);
+            opacity: 0;
+            animation: fadeInLeft 1s ease forwards;
+            flex-shrink: 0;
+        }
+
+        .section-label {
+            font-size: clamp(12px, 1vw, 20px);
+            color: rgba(100, 181, 246, 0.8);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: min(1vh, 10px);
+        }
+
+        .section-title {
+            font-size: clamp(24px, 2.5vw, 48px);
+            font-weight: 300;
+            line-height: 1.2;
+        }
+
+        .section-title strong {
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .challenge-list {
+            display: flex;
+            flex-direction: column;
+            gap: min(1.5vh, 15px);
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 10px;
+        }
+
+        /* 스크롤바 스타일링 */
+        .challenge-list::-webkit-scrollbar,
+        .sector-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .challenge-list::-webkit-scrollbar-track,
+        .sector-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .challenge-list::-webkit-scrollbar-thumb,
+        .sector-grid::-webkit-scrollbar-thumb {
+            background: rgba(100, 181, 246, 0.3);
+            border-radius: 3px;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: min(12px, 1vw);
+            padding: min(2vh, 20px) min(1.8vw, 25px);
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideIn 0.8s ease forwards;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .challenge-card:nth-child(1) { animation-delay: 0.2s; }
+        .challenge-card:nth-child(2) { animation-delay: 0.4s; }
+        .challenge-card:nth-child(3) { animation-delay: 0.6s; }
+        .challenge-card:nth-child(4) { animation-delay: 0.8s; }
+        .challenge-card:nth-child(5) { animation-delay: 1.0s; }
+
+        .challenge-card:hover {
+            transform: translateX(10px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #ff6b6b, #ff8787);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .challenge-title {
+            font-size: clamp(16px, 1.5vw, 28px);
+            font-weight: 600;
+            margin-bottom: min(0.8vh, 8px);
+            color: #ff6b6b;
+        }
+
+        .challenge-desc {
+            font-size: clamp(14px, 1.3vw, 24px);
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .challenge-desc .point {
+            color: rgba(100, 181, 246, 0.9);
+            font-weight: 500;
+        }
+
+        /* 오른쪽 섹션 - 분야별 특수성 */
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .sector-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: min(1.8vh, 20px) min(1.8vw, 25px);
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 10px;
+            align-content: start;
+        }
+
+        .sector-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: min(14px, 1vw);
+            padding: min(2vh, 20px) min(1.8vw, 25px);
+            opacity: 0;
+            transform: scale(0.9);
+            animation: scaleIn 0.8s ease forwards;
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        .sector-card:nth-child(1) { animation-delay: 1.2s; }
+        .sector-card:nth-child(2) { animation-delay: 1.4s; }
+        .sector-card:nth-child(3) { animation-delay: 1.6s; }
+        .sector-card:nth-child(4) { animation-delay: 1.8s; }
+
+        .sector-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sector-card:hover::before {
+            opacity: 1;
+        }
+
+        .sector-header {
+            display: flex;
+            align-items: center;
+            gap: min(1vw, 15px);
+            margin-bottom: min(1.5vh, 15px);
+        }
+
+        .sector-icon {
+            font-size: clamp(24px, 2vw, 36px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: clamp(40px, 3.5vw, 60px);
+            height: clamp(40px, 3.5vw, 60px);
+            background: linear-gradient(135deg, rgba(255, 215, 61, 0.1) 0%, rgba(255, 215, 61, 0.05) 100%);
+            border-radius: min(10px, 0.8vw);
+            flex-shrink: 0;
+        }
+
+        .sector-name {
+            font-size: clamp(20px, 1.8vw, 32px);
+            font-weight: 600;
+            color: #ffd93d;
+        }
+
+        .sector-issues {
+            display: flex;
+            flex-direction: column;
+            gap: min(1vh, 12px);
+        }
+
+        .issue-item {
+            font-size: clamp(13px, 1.3vw, 22px);
+            line-height: 1.35;
+            color: rgba(255, 255, 255, 0.75);
+            padding-left: min(1.5vw, 20px);
+            position: relative;
+        }
+
+        .issue-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: rgba(100, 181, 246, 0.6);
+            font-size: clamp(12px, 1.2vw, 18px);
+        }
+
+        .issue-item strong {
+            color: rgba(255, 107, 107, 0.9);
+            font-weight: 500;
+        }
+
+        /* 중앙 구분선 */
+        .divider {
+            position: absolute;
+            left: calc(50% - min(2vw, 40px));
+            top: 10%;
+            bottom: 10%;
+            width: 1px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.1) 20%, 
+                rgba(255, 255, 255, 0.1) 80%, 
+                transparent 100%);
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        /* 애니메이션 */
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* 2064x1032 해상도 (절반) */
+        @media (max-width: 2064px) and (max-height: 1032px) {
+            .slide-container {
+                padding: 2% 3%;
+            }
+            .section-title {
+                font-size: clamp(22px, 2.3vw, 36px);
+            }
+            .challenge-title {
+                font-size: clamp(15px, 1.4vw, 22px);
+            }
+            .challenge-desc {
+                font-size: clamp(13px, 1.2vw, 20px);
+            }
+            .sector-name {
+                font-size: clamp(18px, 1.6vw, 26px);
+            }
+            .issue-item {
+                font-size: clamp(12px, 1.2vw, 18px);
+            }
+            .challenge-card {
+                padding: min(1.5vh, 15px) min(1.5vw, 20px);
+            }
+            .sector-card {
+                padding: min(1.5vh, 15px) min(1.5vw, 20px);
+            }
+        }
+
+        /* 작은 화면 */
+        @media (max-width: 1366px) {
+            .slide-container {
+                grid-template-columns: 1fr;
+                padding: 2%;
+            }
+            .divider {
+                display: none;
+            }
+            .sector-grid {
+                grid-template-columns: 1fr;
+            }
+            .left-section, .right-section {
+                max-height: 48vh;
+            }
+        }
+
+        /* 가로 모드 최적화 */
+        @media (orientation: landscape) and (max-height: 800px) {
+            .section-header {
+                margin-bottom: min(2vh, 15px);
+            }
+            .challenge-list, .sector-grid {
+                gap: min(1.2vh, 12px);
+            }
+            .challenge-card, .sector-card {
+                padding: min(1.3vh, 12px) min(1.5vw, 18px);
+            }
+            .sector-issues {
+                gap: min(0.8vh, 8px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 왼쪽: 공통 장애요인 -->
+        <div class="left-section">
+            <div class="section-header">
+                <div class="section-label">Common Barriers</div>
+                <h2 class="section-title">
+                    모든 분야가 직면한<br>
+                    <strong>공통 장애요인</strong>
+                </h2>
+            </div>
+
+            <div class="challenge-list">
+                <div class="challenge-card">
+                    <div class="challenge-title">데이터 인프라 부재</div>
+                    <div class="challenge-desc">
+                        해양공간의 낮은 접근성으로 <span class="point">데이터 수집 자체가 불가능</span><br>
+                        복잡한 환경변수로 예측 모델링 정확도 확보 어려움
+                    </div>
+                </div>
+
+                <div class="challenge-card">
+                    <div class="challenge-title">현장 인력의 저항</div>
+                    <div class="challenge-desc">
+                        AI 기술 도입에 대한 <span class="point">막연한 거부감과 두려움</span><br>
+                        고령화된 어업인의 심각한 디지털 격차 문제
+                    </div>
+                </div>
+
+                <div class="challenge-card">
+                    <div class="challenge-title">경제적 부담</div>
+                    <div class="challenge-desc">
+                        스마트 항만, 양식장 구축 <span class="point">막대한 초기 투자비용</span><br>
+                        불확실한 ROI로 중소기업 투자 결정 지연
+                    </div>
+                </div>
+
+                <div class="challenge-card">
+                    <div class="challenge-title">제도적 공백</div>
+                    <div class="challenge-desc">
+                        신기술 대응 <span class="point">법률·규제 체계 부재</span><br>
+                        데이터 공유시 개인정보·보안·지적재산권 충돌
+                    </div>
+                </div>
+
+                <div class="challenge-card">
+                    <div class="challenge-title">극한 해양환경</div>
+                    <div class="challenge-desc">
+                        태풍, 높은 파도, 염분으로 <span class="point">AI 시스템 신뢰성 저하</span><br>
+                        통신 두절, 장비 부식 등 기술적 제약 심각
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 중앙 구분선 -->
+        <div class="divider"></div>
+
+        <!-- 오른쪽: 분야별 특수성 -->
+        <div class="right-section">
+            <div class="section-header" style="animation-delay: 0.3s;">
+                <div class="section-label">Sector-Specific Challenges</div>
+                <h2 class="section-title">
+                    각 분야별<br>
+                    <strong>특수 난제</strong>
+                </h2>
+            </div>
+
+            <div class="sector-grid">
+                <div class="sector-card">
+                    <div class="sector-header">
+                        <div class="sector-icon">🌊</div>
+                        <div class="sector-name">해양</div>
+                    </div>
+                    <div class="sector-issues">
+                        <div class="issue-item">
+                            <strong>심해·극지</strong> 데이터 수집 한계로<br>
+                            AI 학습 범위 제한
+                        </div>
+                        <div class="issue-item">
+                            해양생태계 복잡성으로<br>
+                            <strong>예측모델 정확도</strong> 확보 난항
+                        </div>
+                        <div class="issue-item">
+                            디지털 트윈 구축시<br>
+                            <strong>대용량 데이터</strong> 처리 역량 부족
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-header">
+                        <div class="sector-icon">🐟</div>
+                        <div class="sector-name">수산</div>
+                    </div>
+                    <div class="sector-issues">
+                        <div class="issue-item">
+                            <strong>영세 개별경영</strong> 형태로<br>
+                            조업·어획 데이터 미비
+                        </div>
+                        <div class="issue-item">
+                            노후 양식장 환경이<br>
+                            <strong>스마트화에 부적합</strong>
+                        </div>
+                        <div class="issue-item">
+                            유통단계별 <strong>데이터 분절</strong>로<br>
+                            통합 분석 제한
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-header">
+                        <div class="sector-icon">🚢</div>
+                        <div class="sector-name">해운·해사</div>
+                    </div>
+                    <div class="sector-issues">
+                        <div class="issue-item">
+                            <strong>노후 선박</strong> IoT 센서 설치<br>
+                            개조비용 부담 과중
+                        </div>
+                        <div class="issue-item">
+                            AI 판단 오류시<br>
+                            <strong>안전사고 직결</strong> 우려
+                        </div>
+                        <div class="issue-item">
+                            자율운항 관련<br>
+                            <strong>책임소재</strong> 불명확
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-header">
+                        <div class="sector-icon">⚓</div>
+                        <div class="sector-name">항만</div>
+                    </div>
+                    <div class="sector-issues">
+                        <div class="issue-item">
+                            민간 운영데이터<br>
+                            <strong>민감정보</strong>로 공유 제약
+                        </div>
+                        <div class="issue-item">
+                            AI 도입시 <strong>고용 안정성</strong><br>
+                            우려로 노조 저항
+                        </div>
+                        <div class="issue-item">
+                            극한환경 노출로<br>
+                            <strong>센서 수명 단축</strong> 문제
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>
