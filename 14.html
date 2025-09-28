@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양수산 AX 전환의 필요성</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: #0a0f1b;
+            color: #ffffff;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-wrapper {
+            width: 2560px;
+            height: 896px;
+            max-width: 100vw;
+            max-height: 100vh;
+            position: relative;
+            background: #0a0f1b;
+            transform-origin: center;
+        }
+
+        .content-container {
+            width: 1593px;
+            height: 896px;
+            margin: 0 auto;
+            position: relative;
+            background: transparent;
+        }
+
+        /* Sophisticated background layers */
+        .content-container::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse at 30% 40%, rgba(0, 153, 255, 0.03) 0%, transparent 40%);
+            animation: breathe 20s ease-in-out infinite;
+        }
+
+        .content-container::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.02) 0%, transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.02) 0%, transparent 30%);
+            animation: drift 30s ease-in-out infinite reverse;
+        }
+
+        .noise-texture {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.02;
+            z-index: 1;
+            pointer-events: none;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            padding: 30px 40px 30px 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 40px;
+            width: 100%;
+            height: 90%;
+            max-width: 1500px;
+            margin: 0 auto;
+            align-items: center;
+            justify-items: stretch;
+        }
+
+        /* Left Panel - Main Content */
+        .narrative-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            height: 100%;
+            justify-content: center;
+            overflow-y: auto;
+            padding-right: 10px;
+            padding-left: 0;
+        }
+
+        /* 스크롤바 스타일 */
+        .narrative-section::-webkit-scrollbar,
+        .impact-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .narrative-section::-webkit-scrollbar-track,
+        .impact-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .narrative-section::-webkit-scrollbar-thumb,
+        .impact-panel::-webkit-scrollbar-thumb {
+            background: rgba(100, 181, 246, 0.3);
+            border-radius: 2px;
+        }
+
+        .content-block {
+            position: relative;
+            opacity: 0;
+            animation: revealContent 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            flex-shrink: 0;
+        }
+
+        .content-block:nth-child(1) { animation-delay: 0.5s; }
+        .content-block:nth-child(2) { animation-delay: 1s; }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInLabel 1.5s ease-out forwards;
+        }
+
+        .content-block:nth-child(1) .status-indicator { animation-delay: 0.8s; }
+        .content-block:nth-child(2) .status-indicator { animation-delay: 1.3s; }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 12px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .global-indicator { background: #00ff88; }
+        .korea-indicator { background: #ff5555; }
+
+        .indicator-label {
+            font-size: 14px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+        }
+
+        .content-heading {
+            font-size: 36px;
+            font-weight: 200;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .heading-emphasis {
+            font-weight: 400;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-body {
+            font-size: 22px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+        }
+
+        .content-point {
+            position: relative;
+            margin: 12px 0;
+            padding-left: 25px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-point:hover {
+            color: rgba(255, 255, 255, 0.8);
+            transform: translateX(8px);
+        }
+
+        .content-point::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.9em;
+            width: 12px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: width 0.4s ease;
+        }
+
+        .content-point:hover::before {
+            width: 18px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .emphasis-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        /* Right Panel - Impact Visualization */
+        .impact-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+            padding-left: 0;
+        }
+
+        .cascade-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            animation: fadeInLabel 2s ease-out 1.8s forwards;
+            flex-shrink: 0;
+        }
+
+        .cascade-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .cascade-item {
+            padding: 20px 0;
+            font-size: 26px;
+            color: rgba(255, 255, 255, 0.5);
+            position: relative;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: cascadeReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: default;
+            line-height: 1.4;
+        }
+
+        .cascade-item:nth-child(1) { animation-delay: 2.2s; }
+        .cascade-item:nth-child(2) { animation-delay: 2.5s; }
+        .cascade-item:nth-child(3) { animation-delay: 2.8s; }
+        .cascade-item:nth-child(4) { animation-delay: 3.1s; }
+
+        .cascade-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 85, 85, 0.5));
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .cascade-item:hover {
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateX(0);
+        }
+
+        .cascade-item:hover::before {
+            opacity: 1;
+            left: -25px;
+        }
+
+        .cascade-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 85, 85, 0.1), transparent);
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cascade-item:hover::after {
+            width: 100%;
+        }
+
+        .critical-message {
+            margin-top: 40px;
+            padding-top: 25px;
+            position: relative;
+            opacity: 0;
+            animation: revealContent 2s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+            flex-shrink: 0;
+        }
+
+        .critical-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 45px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .critical-text {
+            font-size: 38px;
+            font-weight: 200;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .critical-highlight {
+            display: block;
+            margin-top: 12px;
+            font-size: 46px;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.9), rgba(0, 153, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 400;
+            animation: pulseText 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        /* Animations */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 0.8; }
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(20px, -10px); }
+            66% { transform: translate(-10px, 20px); }
+        }
+
+        @keyframes revealContent {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLabel {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes cascadeReveal {
+            from { 
+                opacity: 0; 
+                transform: translateX(-20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 반응형 스케일링 */
+        @media (max-width: 2560px) or (max-height: 896px) {
+            .slide-wrapper {
+                transform: scale(calc(min(100vw / 2560px, 100vh / 896px)));
+            }
+        }
+
+        /* 매우 작은 화면 대응 */
+        @media (max-width: 1280px) or (max-height: 448px) {
+            .slide-wrapper {
+                transform: scale(0.5);
+            }
+            
+            .slide-container {
+                padding: 20px 30px 20px 60px;
+            }
+            
+            .content-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                height: 94%;
+            }
+            
+            .narrative-section {
+                gap: 20px;
+                max-height: 45vh;
+            }
+            
+            .impact-panel {
+                max-height: 45vh;
+            }
+            
+            .content-heading {
+                font-size: 28px;
+                margin-bottom: 15px;
+            }
+            
+            .content-body {
+                font-size: 18px;
+            }
+            
+            .content-point {
+                margin: 10px 0;
+                padding-left: 20px;
+            }
+            
+            .cascade-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .cascade-item {
+                font-size: 20px;
+                padding: 15px 0;
+            }
+            
+            .critical-text {
+                font-size: 30px;
+            }
+            
+            .critical-highlight {
+                font-size: 36px;
+                margin-top: 10px;
+            }
+        }
+
+        /* 4K 해상도 최적화 */
+        @media (min-width: 5120px) and (min-height: 1792px) {
+            .slide-wrapper {
+                transform: scale(2);
+            }
+        }
+
+        /* Subtle interaction feedback */
+        .slide-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-wrapper">
+        <div class="content-container">
+            <div class="noise-texture"></div>
+            <div class="slide-container" id="slideContainer">
+                <div class="content-layout">
+                    <div class="narrative-section">
+                        <div class="content-block">
+                            <div class="status-indicator">
+                                <span class="indicator-dot global-indicator"></span>
+                                <span class="indicator-label">Global Maritime Industry</span>
+                            </div>
+                            <h2 class="content-heading">
+                                <span class="heading-emphasis">선진국 해양산업,</span><br>
+                                AI가 이끄는 새로운 표준
+                            </h2>
+                            <div class="content-body">
+                                <div class="content-point">해양·수산·해운·항만 <span class="emphasis-text">전 분야 AI 내재화 단계</span></div>
+                                <div class="content-point">기후위기 대응과 생태계 보전의 <span class="emphasis-text">정밀 예측 시스템 구축</span></div>
+                                <div class="content-point">데이터 기반 의사결정으로 <span class="emphasis-text">불확실성 제거</span></div>
+                                <div class="content-point">산업 전반의 <span class="emphasis-text">구조적 혁신과 효율성 극대화</span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-block">
+                            <div class="status-indicator">
+                                <span class="indicator-dot korea-indicator"></span>
+                                <span class="indicator-label">Korea Maritime Status</span>
+                            </div>
+                            <h2 class="content-heading">
+                                <span class="heading-emphasis">대한민국 해양산업,</span><br>
+                                확대되는 기술 격차
+                            </h2>
+                            <div class="content-body">
+                                <div class="content-point"><span class="emphasis-text">자율운항선박 외</span> 대부분 영역 초기 진입</div>
+                                <div class="content-point">주요 경쟁국 대비 <span class="emphasis-text">2-3년 기술 격차</span></div>
+                                <div class="content-point">GDP 대비 무역 의존도 <span class="emphasis-text">70% 이상</span></div>
+                                <div class="content-point">수출입 화물의 <span class="emphasis-text">99.7% 해운 물류 의존</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="impact-panel">
+                        <h3 class="cascade-title">연쇄적 경쟁력 하락 시나리오</h3>
+                        <div class="cascade-flow">
+                            <div class="cascade-item">수산물 품질 관리 체계 열위</div>
+                            <div class="cascade-item">해운 물류 최적화 지연</div>
+                            <div class="cascade-item">스마트 항만 전환 실패</div>
+                            <div class="cascade-item">국가 무역 경쟁력 급락</div>
+                        </div>
+                        
+                        <div class="critical-message">
+                            <div class="critical-text">
+                                기술 격차가 만드는 미래
+                                <span class="critical-highlight">지금이 아니면 늦습니다</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Subtle mouse tracking for ambient interaction
+        const container = document.getElementById('slideContainer');
+        let mouseX = 0;
+        let mouseY = 0;
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+            
+            container.style.setProperty('--mouse-x', mouseX + 'px');
+            container.style.setProperty('--mouse-y', mouseY + 'px');
+        });
+    </script>
+    
+    <!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

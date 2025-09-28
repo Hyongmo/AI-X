@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양항만 AX 실증센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0f1b 0%, #0f1929 100%);
+            color: #ffffff;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 전체 화면 컨테이너 - 2560x896 */
+        .screen-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a0f1b 0%, #0f1929 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 컨텐츠 영역 - 1593x896 */
+        .content-area {
+            width: 1593px;
+            height: 896px;
+            max-width: 62.22vw; /* 1593/2560 = 0.6222 */
+            max-height: 100vh;
+            position: relative;
+            transform-origin: center center;
+        }
+
+        /* 반응형 스케일링 */
+        @media (max-width: 2560px) {
+            .content-area {
+                transform: scale(calc(100vw / 2560));
+            }
+        }
+
+        @media (max-height: 896px) {
+            .content-area {
+                transform: scale(calc(100vh / 896));
+            }
+        }
+
+        @media (max-width: 2560px) and (max-height: 896px) {
+            .content-area {
+                transform: scale(min(calc(100vw / 2560), calc(100vh / 896)));
+            }
+        }
+
+        /* 배경 데이터 플로우 */
+        .bg-flow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            overflow: hidden;
+        }
+
+        .flow-line {
+            position: absolute;
+            height: 1px;
+            width: 200%;
+            background: linear-gradient(90deg, transparent, #64b5f6, transparent);
+            animation: flowMove 10s linear infinite;
+        }
+
+        @keyframes flowMove {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        /* 상단 헤더 영역 */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 0 15px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .main-title {
+            font-size: 43px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 협력 기관 로고 영역 */
+        .partner-logos {
+            display: flex;
+            gap: 23px;
+            align-items: center;
+        }
+
+        .partner-box {
+            text-align: center;
+            padding: 4px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            animation: fadeIn 1s ease-out 0.5s backwards;
+        }
+
+        .partner-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+        }
+
+        .partner-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffd93d;
+        }
+
+        .collab-symbol {
+            font-size: 28px;
+            color: #64b5f6;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* 메인 콘텐츠 영역 */
+        .main-content {
+            height: calc(100% - 80px);
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 4px;
+        }
+
+        /* 상단 시스템 구조 */
+        .system-architecture {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 15px;
+            padding: 0 8px;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        /* 왼쪽: 지식그래프 구축 */
+        .knowledge-section {
+            animation: slideRight 1s ease-out 0.3s backwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #64b5f6;
+            margin-bottom: 4px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .knowledge-flow {
+            background: rgba(33, 150, 243, 0.1);
+            border: 2px solid rgba(33, 150, 243, 0.3);
+            border-radius: 15px;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .knowledge-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 7px 14px;
+            margin-bottom: 3px;
+            border-radius: 8px;
+            font-size: 19px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .knowledge-item:hover {
+            transform: translateX(6px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .knowledge-icon {
+            font-size: 29px;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 22px;
+            color: #ffd93d;
+            margin: 2px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(4px); }
+        }
+
+        /* 중앙: 인프라 코어 */
+        .infrastructure-section {
+            animation: fadeInScale 1.2s ease-out 0.5s backwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .infra-core {
+            background: linear-gradient(135deg, rgba(21, 101, 192, 0.2), rgba(66, 165, 245, 0.2));
+            border: 2px solid rgba(100, 181, 246, 0.4);
+            border-radius: 23px;
+            padding: 12px;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* 3D 서버 비주얼 */
+        .server-visual {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            flex-grow: 1;
+            align-items: center;
+        }
+
+        .server-unit {
+            background: linear-gradient(180deg, #1565c0, #0d47a1);
+            border: 2px solid rgba(100, 181, 246, 0.5);
+            border-radius: 12px;
+            padding: 4px 5px;
+            text-align: center;
+            position: relative;
+            animation: serverFloat 3s infinite ease-in-out;
+            animation-delay: calc(var(--delay) * 0.3s);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes serverFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .server-icon {
+            font-size: 38px;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 8px rgba(255, 217, 61, 0.5));
+        }
+
+        .server-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffd93d;
+            margin-bottom: 2px;
+        }
+
+        .server-spec {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 공유 자원 강조 */
+        .resource-sharing {
+            background: rgba(255, 217, 61, 0.1);
+            border: 2px solid #ffd93d;
+            border-radius: 15px;
+            padding: 4px 8px;
+            text-align: center;
+        }
+
+        .sharing-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffd93d;
+            margin-bottom: 3px;
+        }
+
+        .sharing-desc {
+            font-size: 18px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .sharing-highlight {
+            color: #64b5f6;
+            font-weight: 600;
+        }
+
+        /* 오른쪽: 기업 활용 */
+        .business-section {
+            animation: slideLeft 1s ease-out 0.3s backwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .business-flow {
+            background: rgba(255, 217, 61, 0.1);
+            border: 2px solid rgba(255, 217, 61, 0.3);
+            border-radius: 15px;
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .business-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 7px 14px;
+            margin-bottom: 3px;
+            border-radius: 8px;
+            font-size: 19px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .business-item:hover {
+            transform: translateX(-6px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .business-icon {
+            font-size: 29px;
+        }
+
+        /* 하단 성과 지표 */
+        .outcome-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            animation: slideUp 0.8s ease-out 1.5s backwards;
+        }
+
+        .outcome-box {
+            text-align: center;
+            padding: 9px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .outcome-box:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .outcome-icon {
+            font-size: 40px;
+            margin-bottom: 5px;
+        }
+
+        .outcome-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: #64b5f6;
+            margin-bottom: 3px;
+        }
+
+        .outcome-desc {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        /* 애니메이션 정의 */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-38px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(38px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 데이터 파티클 효과 */
+        .data-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffd93d;
+            border-radius: 50%;
+            animation: particleFlow 5s infinite linear;
+        }
+
+        @keyframes particleFlow {
+            0% { transform: translate(0, 0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(231px, 0); opacity: 0; }
+        }
+
+        /* 매우 작은 화면에서의 추가 조정 */
+        @media (max-width: 1600px) {
+            .content-area {
+                transform: scale(calc(100vw / 2560));
+            }
+        }
+
+        @media (max-height: 700px) {
+            .content-area {
+                transform: scale(calc(100vh / 896));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="screen-container">
+        <!-- 배경 플로우 효과 -->
+        <div class="bg-flow">
+            <div class="flow-line" style="top: 20%;"></div>
+            <div class="flow-line" style="top: 40%; animation-delay: 2s;"></div>
+            <div class="flow-line" style="top: 60%; animation-delay: 4s;"></div>
+            <div class="flow-line" style="top: 80%; animation-delay: 6s;"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="container">
+                <!-- 헤더: 제목 + 협력 기관 -->
+                <div class="header-section">
+                    <h1 class="main-title">해양항만 AX 실증센터</h1>
+                    <div class="partner-logos">
+                        <div class="partner-box">
+                            <div class="partner-label">주관</div>
+                            <div class="partner-name">부산시</div>
+                        </div>
+                        <div class="collab-symbol">🤝</div>
+                        <div class="partner-box">
+                            <div class="partner-label">협력</div>
+                            <div class="partner-name">해수부</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 메인 콘텐츠 -->
+                <div class="main-content">
+                    <!-- 시스템 아키텍처 -->
+                    <div class="system-architecture">
+                        <!-- 왼쪽: 지식그래프 구축 -->
+                        <div class="knowledge-section">
+                            <h3 class="section-title">
+                                <span>📊</span>
+                                <span>지식그래프 구축</span>
+                            </h3>
+                            <div class="knowledge-flow">
+                                <div class="knowledge-item">
+                                    <span class="knowledge-icon">🌊</span>
+                                    <span>해양 데이터</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="knowledge-item">
+                                    <span class="knowledge-icon">🐟</span>
+                                    <span>수산 데이터</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="knowledge-item">
+                                    <span class="knowledge-icon">🚢</span>
+                                    <span>해운항만 데이터</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="knowledge-item" style="background: rgba(255, 217, 61, 0.2); border: 2px solid #ffd93d;">
+                                    <span class="knowledge-icon">🧠</span>
+                                    <span><strong>해양수산 특화<br>지식체계</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 중앙: 인프라 거점 -->
+                        <div class="infrastructure-section">
+                            <h3 class="section-title">
+                                <span>⚡</span>
+                                <span>해양수산 데이터 및 AI 인프라 거점</span>
+                            </h3>
+                            <div class="infra-core">
+                                <!-- 서버 유닛들 -->
+                                <div class="server-visual">
+                                    <div class="server-unit" style="--delay: 0;">
+                                        <div class="server-icon">💾</div>
+                                        <div class="server-label">GPU 클러스터</div>
+                                        <div class="server-spec">고성능 연산</div>
+                                    </div>
+                                    <div class="server-unit" style="--delay: 1;">
+                                        <div class="server-icon">🗄️</div>
+                                        <div class="server-label">스토리지</div>
+                                        <div class="server-spec">대용량 저장</div>
+                                    </div>
+                                    <div class="server-unit" style="--delay: 2;">
+                                        <div class="server-icon">🔗</div>
+                                        <div class="server-label">지식 DB</div>
+                                        <div class="server-spec">온톨로지 기반</div>
+                                    </div>
+                                </div>
+
+                                <!-- 공유 자원 강조 박스 -->
+                                <div class="resource-sharing">
+                                    <div class="sharing-title">🎯 데이터-연산자원 공유 플랫폼</div>
+                                    <div class="sharing-desc">
+                                        <span class="sharing-highlight">온프레미스 해양수산 지식체계 구축</span><br>
+                                        해양수산 기업/기관/대학 <span class="sharing-highlight">AI 연산자원 공유</span><br>
+                                        기업-기관-대학간 협업 및 혁신생태계 조성
+                                    </div>
+                                </div>
+
+                                <!-- 데이터 파티클 -->
+                                <div class="data-particle" style="top: 20%; left: 0;"></div>
+                                <div class="data-particle" style="top: 40%; left: 0; animation-delay: 1s;"></div>
+                                <div class="data-particle" style="top: 60%; left: 0; animation-delay: 2s;"></div>
+                            </div>
+                        </div>
+
+                        <!-- 오른쪽: 기업 활용 -->
+                        <div class="business-section">
+                            <h3 class="section-title">
+                                <span>🚀</span>
+                                <span>산업 AX 실현</span>
+                            </h3>
+                            <div class="business-flow">
+                                <div class="business-item">
+                                    <span class="business-icon">💡</span>
+                                    <span>신규 서비스 개발</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="business-item">
+                                    <span class="business-icon">🔧</span>
+                                    <span>AI 솔루션 실증</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="business-item">
+                                    <span class="business-icon">📈</span>
+                                    <span>비즈니스 혁신</span>
+                                </div>
+                                <div class="arrow-down">↓</div>
+                                <div class="business-item" style="background: rgba(100, 181, 246, 0.2); border: 2px solid #64b5f6;">
+                                    <span class="business-icon">🏆</span>
+                                    <span><strong>해양산업<br>디지털 전환</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 하단 성과 지표 -->
+                    <div class="outcome-section">
+                        <div class="outcome-box">
+                            <div class="outcome-icon">🏢</div>
+                            <div class="outcome-title">기업 지원</div>
+                            <div class="outcome-desc">중소·스타트업<br>AI 인프라 제공</div>
+                        </div>
+                        <div class="outcome-box">
+                            <div class="outcome-icon">🔬</div>
+                            <div class="outcome-title">R&D 활성화</div>
+                            <div class="outcome-desc">산학연 공동연구<br>실증 거점</div>
+                        </div>
+                        <div class="outcome-box">
+                            <div class="outcome-icon">🌍</div>
+                            <div class="outcome-title">데이터 주권</div>
+                            <div class="outcome-desc">국가 해양 데이터<br>자주적 관리</div>
+                        </div>
+                        <div class="outcome-box">
+                            <div class="outcome-icon">⚡</div>
+                            <div class="outcome-title">산업 혁신</div>
+                            <div class="outcome-desc">해양수산 분야<br>완전 자동화</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

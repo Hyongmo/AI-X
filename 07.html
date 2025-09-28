@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국외 항만 AI 현황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            color: #ffffff;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 컨텐츠 영역 제한 */
+        .content-area {
+            width: 1593px;
+            height: 896px;
+            position: relative;
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+
+        /* 반응형 스케일링 */
+        @media screen {
+            .content-area {
+                transform-origin: center center;
+                transform: scale(min(calc(100vw / 2560), calc(100vh / 896)));
+            }
+        }
+
+        .content-wrapper {
+            width: 100%;
+            height: 100%;
+            padding: 35px 62px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 23px;
+            height: 100%;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .ai-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 13px 23px;
+            border: 0.8px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1.3px;
+            background: linear-gradient(90deg, #00d4ff, #0099ff);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .ai-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ai-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 31px rgba(0, 212, 255, 0.2);
+        }
+
+        .card-header {
+            margin-bottom: 9px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #00d4ff, #0066cc);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffffff;
+            flex: 1;
+        }
+
+        .card-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #b8c5d6;
+            margin-bottom: 9px;
+            flex: 1;
+        }
+
+        .card-highlight {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 7px 12px;
+            border-radius: 8px;
+            margin: 7px 0;
+            border-left: 2.4px solid #00d4ff;
+            font-size: 14px;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            padding: 3px 9px;
+            background: rgba(0, 153, 255, 0.2);
+            border-radius: 15px;
+            color: #00d4ff;
+            font-size: 11px;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .stats-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-right: 6px;
+        }
+
+        .video-grid {
+            grid-column: span 2;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 13px 23px;
+            border: 0.8px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-header {
+            margin-bottom: 9px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .video-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #00d4ff, #0066cc);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .video-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .video-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #b8c5d6;
+            margin-bottom: 9px;
+        }
+
+        .videos-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .videos-container iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 9px;
+            border: 0.8px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .videos-container iframe:hover {
+            transform: scale(1.02);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 0 23px rgba(0, 212, 255, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(9px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .decorative-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 0.4px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 컨텐츠 영역 제한 -->
+        <div class="content-area">
+            <div class="content-wrapper">
+                <div class="content-grid">
+                    <div class="ai-card">
+                        <div class="card-header">
+                            <div class="card-icon">🤖</div>
+                            <h3 class="card-title">AI 기반 의사결정 지원</h3>
+                        </div>
+                        <div class="card-content">
+                            <strong>LLM 기반 통합 관리</strong><br>
+                            최신 AI 기술을 항만 운영에 접목하여 실시간 최적화 달성
+                        </div>
+                        <div class="card-highlight">
+                            운영 효율성 <span class="stats-number">35%</span> 향상
+                        </div>
+                        <div>
+                            <span class="tech-badge">머신러닝</span>
+                            <span class="tech-badge">예측분석</span>
+                        </div>
+                    </div>
+
+                    <div class="ai-card">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <h3 class="card-title">자동화 장비 도입</h3>
+                        </div>
+                        <div class="card-content">
+                            <strong>무인 운영 시스템</strong><br>
+                            AGV, AutoStrad™, ASC/ARMG 등 무인 운반·적재 시스템으로 24시간 무중단 자동 운영
+                        </div>
+                        <div class="card-highlight">
+                            전 세계 <span class="stats-number">300+</span> 터미널 운영
+                        </div>
+                        <div>
+                            <span class="tech-badge">AGV</span>
+                            <span class="tech-badge">AutoStrad™</span>
+                            <span class="tech-badge">ASC</span>
+                        </div>
+                    </div>
+
+                    <div class="ai-card">
+                        <div class="card-header">
+                            <div class="card-icon">💬</div>
+                            <h3 class="card-title">TerminalGPT ('23)</h3>
+                        </div>
+                        <div class="card-content">
+                            <strong>LLM 기반 항만 운영</strong><br>
+                            중국 Westwell사가 개발한 컨테이너 항만 운영 전용 대규모 언어모델 시스템
+                        </div>
+                        <div class="card-highlight">
+                            처리 시간 <span class="stats-number">40%</span> 단축
+                        </div>
+                        <div>
+                            <span class="tech-badge">LLM</span>
+                            <span class="tech-badge">자연언어처리</span>
+                        </div>
+                    </div>
+
+                    <div class="ai-card">
+                        <div class="card-header">
+                            <div class="card-icon">🔄</div>
+                            <h3 class="card-title">디지털트윈 도입</h3>
+                        </div>
+                        <div class="card-content">
+                            <strong>가상 시뮬레이션</strong><br>
+                            로테르담, 앤트워프 등 주요 항만의 실시간 가상화로 운영 효율 극대화
+                        </div>
+                        <div class="card-highlight">
+                            시뮬레이션 정확도 <span class="stats-number">95%</span>
+                        </div>
+                        <div>
+                            <span class="tech-badge">3D모델링</span>
+                            <span class="tech-badge">실시간분석</span>
+                        </div>
+                    </div>
+
+                    <div class="video-grid">
+                        <div class="video-header">
+                            <div class="video-icon">📹</div>
+                            <h3 class="video-title">스마트항만 혁신 사례</h3>
+                        </div>
+                        <div class="video-content">
+                            상하이 양산항 4단계: AGV 130대+ 운영<br>
+                            호주 Patrick: AutoStrad™ 16년간 무사고<br>
+                            로테르담 ECT: 처리량 40% 증가, 인력 75% 감소
+                        </div>
+                        
+                        <div class="videos-container">
+                            <iframe src="https://www.youtube.com/embed/DTv1RW7qBQc?autoplay=1&mute=1&loop=1&playlist=DTv1RW7qBQc" 
+                                    title="AutoStrad 자동화 장비" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                            
+                            <iframe src="https://www.youtube.com/embed/xKFBkLB90C8?autoplay=1&mute=1&loop=1&playlist=xKFBkLB90C8" 
+                                    title="스마트항만 통합 운영" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decorative-line"></div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

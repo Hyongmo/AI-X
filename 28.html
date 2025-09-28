@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI 기반 해양환경예측 연구구조</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 1593px;
+            height: 896px;
+            position: relative;
+            padding: 25px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .research-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 0 0 auto;
+        }
+
+        .application-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .disaster-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05));
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .carbon-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .card-badge {
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .disaster-badge {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
+        .carbon-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .disaster-icon {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
+        .carbon-icon {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .arrows-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 5px 0;
+        }
+
+        .arrow-up {
+            width: 0;
+            height: 0;
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-bottom: 20px solid rgba(139, 92, 246, 0.6);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .core-section {
+            background: rgba(147, 51, 234, 0.1);
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .core-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .core-badge {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .core-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .core-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .core-item {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .core-item-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 6px;
+        }
+
+        .core-item-content {
+            font-size: 10px;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .bottom-section {
+            background: rgba(6, 182, 212, 0.1);
+            border: 2px solid rgba(34, 211, 238, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            flex: 0 0 auto;
+        }
+
+        .bottom-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .bottom-badge {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .bottom-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .tech-item {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 8px;
+            padding: 8px 6px;
+            text-align: center;
+            font-size: 10px;
+            color: #cbd5e1;
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+        }
+
+        /* 애니메이션 */
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .title-section {
+            animation: slideInFromTop 0.6s ease-out;
+        }
+
+        .disaster-card {
+            animation: slideInFromLeft 0.8s ease-out 0.3s both;
+        }
+
+        .carbon-card {
+            animation: slideInFromRight 0.8s ease-out 0.3s both;
+        }
+
+        .arrows-container {
+            animation: fadeInScale 0.6s ease-out 0.8s both;
+        }
+
+        .core-section {
+            animation: slideInFromTop 0.8s ease-out 1.0s both;
+        }
+
+        .bottom-section {
+            animation: slideInFromTop 0.8s ease-out 1.3s both;
+        }
+
+        .application-card:hover {
+            transform: translateY(-3px);
+            transition: all 0.3s ease;
+        }
+
+        .disaster-card:hover {
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .carbon-card:hover {
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        }
+
+        /* 반응형 스케일링 */
+        @media (max-width: 1593px) {
+            .slide-container {
+                width: 100vw;
+                max-width: 1593px;
+                height: 56.25vw;
+                max-height: 896px;
+                transform: scale(calc(100vw / 1593));
+                transform-origin: center center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 제목 섹션 -->
+        <div class="title-section">
+            <div class="main-title">생성형 AI 기반 기후위기(조수재난 및 탄소규제) 대응 기술</div>
+        </div>
+
+        <div class="research-container">
+            <!-- 응용분야 섹션 -->
+            <div class="top-section">
+                <div class="application-card disaster-card">
+                    <div class="card-header">
+                        <div class="card-badge disaster-badge">🌊 조수재난 대응</div>
+                    </div>
+                    <div class="card-title">조수재난 예측 및 대응 시스템</div>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon disaster-icon">🎯</div>
+                            <span>조수재난 고정밀 예측 기술</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon disaster-icon">🧠</div>
+                            <span>지능형 대응 전략 지원</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon disaster-icon">⚡</div>
+                            <span>기관 연계 재난정보 공유</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon disaster-icon">📱</div>
+                            <span>실시간 정보 플랫폼</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="application-card carbon-card">
+                    <div class="card-header">
+                        <div class="card-badge carbon-badge">⚡ 탄소규제 대응</div>
+                    </div>
+                    <div class="card-title">해상운송 최적화 시스템</div>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon carbon-icon">🌐</div>
+                            <span>운송량 디지털트윈 구축</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon carbon-icon">📊</div>
+                            <span>탄소배출량 예측 분석</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon carbon-icon">⚡</div>
+                            <span>X-이벤트 실시간 대응</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon carbon-icon">🎯</div>
+                            <span>최적 경로 자동 제시</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 화살표 -->
+            <div class="arrows-container">
+                <div class="arrow-up"></div>
+                <div class="arrow-up"></div>
+            </div>
+
+            <!-- 핵심 기술 섹션 -->
+            <div class="core-section">
+                <div class="core-header">
+                    <div class="core-badge">🎯 핵심 기술</div>
+                    <div class="core-title">해양 물리환경 분석·예측 기술</div>
+                </div>
+                
+                <div class="core-grid">
+                    <div class="core-item">
+                        <div class="core-item-title">공간정보 기술</div>
+                        <div class="core-item-content">
+                            ▶ 초해상화 기법 적용<br>
+                            ▶ 해상도 개선 (2km 수준)<br>
+                            ▶ 데이터 융합 기술
+                        </div>
+                    </div>
+                    <div class="core-item">
+                        <div class="core-item-title">예측 모델</div>
+                        <div class="core-item-content">
+                            ▶ 생성형 AI 예측모델<br>
+                            ▶ Surrogate 모델 개발<br>
+                            ▶ 물리법칙 제약 적용
+                        </div>
+                    </div>
+                    <div class="core-item">
+                        <div class="core-item-title">성능 목표</div>
+                        <div class="core-item-content">
+                            ▶ 예측 속도 100배↑<br>
+                            ▶ 정확도 20-30%↑<br>
+                            ▶ 실시간 처리 가능
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 화살표 -->
+            <div class="arrows-container">
+                <div class="arrow-up"></div>
+            </div>
+
+            <!-- 온톨로지 기반 구축 섹션 -->
+            <div class="bottom-section">
+                <div class="bottom-header">
+                    <div class="bottom-badge">🚀 기반 구축</div>
+                </div>
+                <div class="bottom-title">온톨로지 지식체계 설계</div>
+                
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        해양물리·해상물류 데이터 지식체계 설계 기술
+                    </div>
+                    <div class="tech-item">
+                        지식그래프 기반 구축 (트리플 100만건 이상)
+                    </div>
+                    <div class="tech-item">
+                        AI기반 Domain Specific Agent 개발
+                    </div>
+                    <div class="tech-item">
+                        멀티모달 데이터베이스 구축
+                    </div>
+                    <div class="tech-item">
+                        RAG 기반 질의응답 시스템 개발
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

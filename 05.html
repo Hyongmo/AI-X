@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국외 수산 AI 현황</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 컨텐츠 영역 제한 */
+        .content-area {
+            width: 1593px;
+            height: 896px;
+            position: relative;
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+
+        /* 반응형 스케일링 */
+        @media screen {
+            .content-area {
+                transform-origin: center center;
+                transform: scale(min(calc(100vw / 2560), calc(100vh / 896)));
+            }
+        }
+
+        .content-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 35px 62px;
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 46px;
+            flex: 1;
+            margin-top: 17px;
+        }
+
+        .countries-section {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .country-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 0.8px solid rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 11px 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .country-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b82f6, #60a5fa);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .country-card:hover {
+            transform: translateX(8px);
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .country-card:hover::before {
+            opacity: 1;
+        }
+
+        .country-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 7px;
+        }
+
+        .country-flag {
+            width: 31px;
+            height: 31px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .country-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .country-content {
+            font-size: 15px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            padding-left: 43px;
+        }
+
+        .company-highlight {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            gap: 31px;
+        }
+
+        .video-container {
+            background: rgba(15, 23, 42, 0.7);
+            border: 0.8px solid rgba(71, 85, 105, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-header {
+            padding: 9px 19px;
+            background: rgba(30, 41, 59, 0.5);
+            border-bottom: 0.8px solid rgba(71, 85, 105, 0.3);
+        }
+
+        .video-title {
+            font-size: 17px;
+            color: #e2e8f0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-badge {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 2px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .video-placeholder {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 131px;
+            position: relative;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .play-button {
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 19px solid white;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 6px;
+        }
+
+        .divider {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1.6px;
+            height: 80%;
+            background: linear-gradient(180deg, transparent, rgba(96, 165, 250, 0.3), transparent);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(96, 165, 250, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(96, 165, 250, 0);
+            }
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: rgba(96, 165, 250, 0.1);
+            border: 0.8px solid rgba(96, 165, 250, 0.3);
+            color: #93c5fd;
+            padding: 2px 8px;
+            border-radius: 9px;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 컨텐츠 영역 제한 -->
+        <div class="content-area">
+            <div class="content-wrapper">
+                <div class="main-content">
+                    <div class="countries-section">
+                        <div class="country-card">
+                            <div class="country-header">
+                                <div class="country-flag">🇺🇸</div>
+                                <span class="country-name">미국</span>
+                            </div>
+                            <div class="country-content">
+                                <span class="company-highlight">NOAA Fisheries</span>: AI 기반 해양 생태계 모니터링 및 어류 개체수 예측<br>
+                                <span class="company-highlight">FDA</span>: 머신러닝 수입 수산물 안전성 평가 시스템
+                            </div>
+                        </div>
+
+                        <div class="country-card">
+                            <div class="country-header">
+                                <div class="country-flag">🇳🇴</div>
+                                <span class="country-name">노르웨이</span>
+                            </div>
+                            <div class="country-content">
+                                <span class="company-highlight">AKVA</span>: 자동화 양식장 운영 스마트 양식 선도<br>
+                                <span class="company-highlight">AquaByte</span>: AI 기반 사료 섭취량 감지 시스템
+                                <span class="tech-badge">비용 절감</span>
+                            </div>
+                        </div>
+
+                        <div class="country-card">
+                            <div class="country-header">
+                                <div class="country-flag">🇯🇵</div>
+                                <span class="country-name">일본</span>
+                            </div>
+                            <div class="country-content">
+                                <span class="company-highlight">Dentsu 튜나스코프</span>: 딥러닝 참치 품질 판별<br>
+                                <span class="company-highlight">UMITRON</span>: AI 스마트 피딩 시스템
+                                <span class="tech-badge">최적화</span>
+                            </div>
+                        </div>
+
+                        <div class="country-card">
+                            <div class="country-header">
+                                <div class="country-flag">🇨🇦</div>
+                                <span class="country-name">캐나다</span>
+                            </div>
+                            <div class="country-content">
+                                <span class="company-highlight">XpertSea</span>: AI 양식장 관리 플랫폼<br>
+                                <span class="company-highlight">ReelData</span>: 통합 데이터 자동화 플랫폼
+                            </div>
+                        </div>
+
+                        <div class="country-card">
+                            <div class="country-header">
+                                <div class="country-flag">🇦🇺</div>
+                                <span class="country-name">호주</span>
+                            </div>
+                            <div class="country-content">
+                                <span class="company-highlight">FishFace</span>: 안면인식 기반 수산물 정보 수집
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="video-section">
+                        <div class="video-container">
+                            <div class="video-header">
+                                <div class="video-title">
+                                    Watatumi
+                                    <span class="video-badge">일본</span>
+                                </div>
+                            </div>
+                            <div class="video-placeholder">
+                                <iframe 
+                                    src="https://www.youtube.com/embed/t40ARAEbSTo?autoplay=1&mute=1&loop=1&playlist=t40ARAEbSTo" 
+                                    title="Watatumi"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <div class="video-container">
+                            <div class="video-header">
+                                <div class="video-title">
+                                    ReelData Platform
+                                    <span class="video-badge">캐나다</span>
+                                </div>
+                            </div>
+                            <div class="video-placeholder">
+                                <iframe 
+                                    src="https://www.youtube.com/embed/VTamWwiaF54?autoplay=1&mute=1&loop=1&playlist=VTamWwiaF54" 
+                                    title="ReelData"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

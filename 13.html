@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양수산 AX 정책 방향</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
+            background: #0a1628;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-wrapper {
+            width: 2560px;
+            height: 896px;
+            max-width: 100vw;
+            max-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+            transform-origin: center;
+        }
+
+        .content-container {
+            width: 1593px;
+            height: 896px;
+            margin: 0 auto;
+            position: relative;
+            background: transparent;
+        }
+        
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* 배경 파도 애니메이션 */
+        .wave-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+        
+        .wave {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 150, 255, 0.1) 50%, transparent 70%);
+            animation: wave-motion 25s infinite ease-in-out;
+        }
+        
+        .wave:nth-child(2) {
+            animation-delay: -8s;
+            opacity: 0.5;
+        }
+        
+        .wave:nth-child(3) {
+            animation-delay: -16s;
+            opacity: 0.3;
+        }
+        
+        @keyframes wave-motion {
+            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            33% { transform: translate(-45%, -55%) scale(1.1) rotate(120deg); }
+            66% { transform: translate(-55%, -45%) scale(0.9) rotate(240deg); }
+        }
+        
+        /* 디지털 그리드 */
+        .digital-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 183, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 183, 255, 0.02) 1px, transparent 1px);
+            background-size: 58px 58px;
+            animation: grid-move 30s linear infinite;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(58px, 58px); }
+        }
+        
+        /* AI 네트워크 노드 */
+        .ai-nodes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .node {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(0, 255, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .node::after {
+            content: '';
+            position: absolute;
+            width: 78px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), transparent);
+            transform-origin: left center;
+            animation: connect 10s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-14px) translateX(8px); }
+            50% { transform: translateY(8px) translateX(-8px); }
+            75% { transform: translateY(-8px) translateX(14px); }
+        }
+        
+        @keyframes connect {
+            0%, 100% { opacity: 0; transform: rotate(0deg) scaleX(0); }
+            50% { opacity: 1; transform: rotate(360deg) scaleX(1); }
+        }
+        
+        /* 메인 콘텐츠 */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+            max-width: 1080px;
+            padding: 78px;
+            animation: fadeInUp 2s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-number {
+            display: inline-flex;
+            width: 116px;
+            height: 116px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 150, 255, 0.1));
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            font-size: 70px;
+            font-weight: 900;
+            color: #00e5ff;
+            margin-bottom: 58px;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 38px rgba(0, 229, 255, 0.6), 0 0 58px rgba(0, 229, 255, 0.3);
+            }
+        }
+        
+        .main-title {
+            font-size: 82px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 38px;
+            background: linear-gradient(135deg, #ffffff 0%, #00e5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShine 4s ease-in-out infinite;
+            letter-spacing: -2px;
+        }
+        
+        @keyframes titleShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+        
+        .sub-title {
+            font-size: 34px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+            animation: fadeIn 2s ease-out 0.5s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 0.7; }
+        }
+        
+        /* 플로팅 AX 텍스트 */
+        .floating-ax {
+            position: absolute;
+            font-size: 194px;
+            font-weight: 900;
+            color: rgba(0, 255, 255, 0.03);
+            animation: floatAX 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .floating-ax.left {
+            top: 15%;
+            left: -78px;
+        }
+        
+        .floating-ax.right {
+            bottom: 15%;
+            right: -78px;
+            animation-delay: -10s;
+        }
+        
+        @keyframes floatAX {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-38px) rotate(5deg); }
+        }
+        
+        /* 데이터 플로우 라인 */
+        .data-flow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.08;
+        }
+        
+        .flow-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+            animation: flowMove 12s linear infinite;
+        }
+        
+        .flow-line:nth-child(1) { top: 25%; width: 340px; animation-duration: 10s; }
+        .flow-line:nth-child(2) { top: 45%; width: 436px; animation-duration: 12s; animation-delay: -3s; }
+        .flow-line:nth-child(3) { top: 65%; width: 388px; animation-duration: 11s; animation-delay: -6s; }
+        .flow-line:nth-child(4) { top: 85%; width: 484px; animation-duration: 13s; animation-delay: -9s; }
+        
+        @keyframes flowMove {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(calc(1593px + 100%)); }
+        }
+        
+        /* 파티클 효과 */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: particle-float 20s linear infinite;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(896px) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-896px) translateX(96px);
+                opacity: 0;
+            }
+        }
+        
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 18s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: -2s; animation-duration: 22s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: -4s; animation-duration: 20s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: -6s; animation-duration: 24s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: -8s; animation-duration: 19s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: -10s; animation-duration: 21s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: -12s; animation-duration: 23s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: -14s; animation-duration: 20s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: -16s; animation-duration: 22s; }
+        
+        /* 반응형 스케일링 */
+        @media (max-width: 2560px) or (max-height: 896px) {
+            .slide-wrapper {
+                transform: scale(calc(min(100vw / 2560px, 100vh / 896px)));
+            }
+        }
+
+        /* 매우 작은 화면 대응 */
+        @media (max-width: 1280px) or (max-height: 448px) {
+            .slide-wrapper {
+                transform: scale(0.5);
+            }
+            
+            .content-wrapper {
+                padding: 60px;
+            }
+            
+            .section-number {
+                width: 90px;
+                height: 90px;
+                font-size: 54px;
+                margin-bottom: 45px;
+            }
+            
+            .main-title {
+                font-size: 64px;
+                margin-bottom: 30px;
+                letter-spacing: -1.5px;
+            }
+            
+            .sub-title {
+                font-size: 26px;
+                letter-spacing: 1.5px;
+            }
+            
+            .floating-ax {
+                font-size: 150px;
+            }
+            
+            .floating-ax.left {
+                left: -60px;
+            }
+            
+            .floating-ax.right {
+                right: -60px;
+            }
+        }
+
+        /* 4K 해상도 최적화 */
+        @media (min-width: 5120px) and (min-height: 1792px) {
+            .slide-wrapper {
+                transform: scale(2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-wrapper">
+        <div class="content-container">
+            <div class="slide-container">
+                <!-- 배경 효과들 -->
+                <div class="wave-background">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
+                
+                <div class="digital-grid"></div>
+                
+                <div class="data-flow">
+                    <div class="flow-line"></div>
+                    <div class="flow-line"></div>
+                    <div class="flow-line"></div>
+                    <div class="flow-line"></div>
+                </div>
+                
+                <div class="particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+                
+                <div class="ai-nodes">
+                    <div class="node" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
+                    <div class="node" style="top: 30%; right: 20%; animation-delay: -3s;"></div>
+                    <div class="node" style="bottom: 35%; left: 12%; animation-delay: -6s;"></div>
+                    <div class="node" style="bottom: 25%; right: 18%; animation-delay: -9s;"></div>
+                    <div class="node" style="top: 55%; left: 8%; animation-delay: -12s;"></div>
+                    <div class="node" style="top: 45%; right: 10%; animation-delay: -15s;"></div>
+                </div>
+                
+                <div class="floating-ax left">AI+X</div>
+                <div class="floating-ax right">AI+X</div>
+                
+                <!-- 메인 콘텐츠 -->
+                <div class="content-wrapper">
+                    <div class="section-number">3</div>
+                    
+                    <h1 class="main-title">
+                        해양수산 AX 정책 방향
+                    </h1>
+                    
+                    <p class="sub-title">AX Transformation Strategy & Policy Direction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>

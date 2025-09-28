@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI 기반 해양환경예측 - 필요성 및 목적</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #0f1823 100%);
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 1593px;
+            height: 896px;
+            position: relative;
+            padding: 35px 45px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 18px;
+            padding: 25px 30px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            border-radius: 18px 18px 0 0;
+        }
+
+        .necessity-section::before {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        }
+
+        .purpose-section::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .necessity-section .section-icon {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .purpose-section .section-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .necessity-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .necessity-item {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+        }
+
+        .necessity-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b82f6, #60a5fa);
+            border-radius: 12px 0 0 12px;
+        }
+
+        .necessity-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #93c5fd;
+            margin-bottom: 12px;
+            padding-left: 15px;
+        }
+
+        .necessity-item-content {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            padding-left: 15px;
+        }
+
+        .highlight {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .orange-highlight {
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        .green-highlight {
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        .purpose-content {
+            background: rgba(15, 23, 42, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 20px 25px;
+            text-align: center;
+        }
+
+        .purpose-main {
+            font-size: 16px;
+            color: #e2e8f0;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .purpose-goals {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .purpose-goal {
+            flex: 1;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .goal-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 24px;
+            margin-bottom: 8px;
+        }
+
+        .goal-text {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        /* 애니메이션 */
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes slideInStagger {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 애니메이션 적용 */
+        .necessity-section {
+            animation: slideInFromTop 0.8s ease-out;
+        }
+
+        .purpose-section {
+            animation: slideInFromTop 0.8s ease-out 0.3s both;
+        }
+
+        .necessity-item:nth-child(1) {
+            animation: slideInFromLeft 0.6s ease-out 0.5s both;
+        }
+
+        .necessity-item:nth-child(2) {
+            animation: slideInFromLeft 0.6s ease-out 0.7s both;
+        }
+
+        .necessity-content > div:nth-child(2) .necessity-item:nth-child(1) {
+            animation: slideInFromRight 0.6s ease-out 0.9s both;
+        }
+
+        .necessity-content > div:nth-child(2) .necessity-item:nth-child(2) {
+            animation: slideInFromRight 0.6s ease-out 1.1s both;
+        }
+
+        .purpose-goal:nth-child(1) {
+            animation: slideInStagger 0.5s ease-out 1.3s both;
+        }
+
+        .purpose-goal:nth-child(2) {
+            animation: slideInStagger 0.5s ease-out 1.5s both;
+        }
+
+        .purpose-goal:nth-child(3) {
+            animation: slideInStagger 0.5s ease-out 1.7s both;
+        }
+
+        .section-icon {
+            animation: pulse 2s infinite 2s;
+        }
+
+        .necessity-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .purpose-goal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .section::before {
+            animation: slideInFromLeft 1s ease-out 0.2s both;
+        }
+
+        /* 반응형 스케일링 */
+        @media (max-width: 1593px) {
+            .slide-container {
+                width: 100vw;
+                max-width: 1593px;
+                height: 56.25vw;
+                max-height: 896px;
+                transform: scale(calc(100vw / 1593));
+                transform-origin: center center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 필요성 섹션 -->
+        <div class="section necessity-section">
+            <div class="section-header">
+                <div class="section-icon">🎯</div>
+                <div class="section-title">필요성</div>
+            </div>
+            
+            <div class="necessity-content">
+                <!-- 첫 번째 열 -->
+                <div>
+                    <div class="necessity-item">
+                        <div class="necessity-item-title">1. 데이터 연결 및 지식체계 구축</div>
+                        <div class="necessity-item-content">
+                            • <span class="highlight">분산된 해양수산 데이터</span> 연결을 위한 AI 기반 접근<br>
+                            • 생성형 AI 활용 데이터 연결 가능<br>
+                            • <span class="orange-highlight">온톨로지 기반 인과성 지식체계</span> 선행 구축 필수
+                        </div>
+                    </div>
+                    
+                    <div class="necessity-item">
+                        <div class="necessity-item-title">2. 해양물리환경 예측능력 강화</div>
+                        <div class="necessity-item-content">
+                            • 기존 수치모델 대비 <span class="highlight">생성형 AI의 높은 예측력</span><br>
+                            • 데이터 증강을 통한 예측 성능 향상<br>
+                            • <span class="green-highlight">NVIDIA Earth-2</span> 등 성공 사례 존재
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 두 번째 열 -->
+                <div>
+                    <div class="necessity-item">
+                        <div class="necessity-item-title">3. 조수재난 예측·대응 한계</div>
+                        <div class="necessity-item-content">
+                            • 지구온난화로 <span class="highlight">극한 해양재난 위험</span> 증대<br>
+                            • 태풍 강도 증가, 폭우량 14% 증가<br>
+                            • <span class="orange-highlight">고조·너울·월파·해일</span>의 비선형적 복합 발생<br>
+                            • 기존 매뉴얼 기반 대응의 한계
+                        </div>
+                    </div>
+                    
+                    <div class="necessity-item">
+                        <div class="necessity-item-title">4. 해운탄소배출 규제 대응</div>
+                        <div class="necessity-item-content">
+                            • IMO: 2035년 30%, 2040년 65% <span class="highlight">탄소배출 감축</span><br>
+                            • EU: 해운부문 ETS 포함, FuelEU Maritime 규제<br>
+                            • <span class="orange-highlight">중소화주</span>에게 무역장벽으로 작용<br>
+                            • 실시간 탄소배출량 예측 기술 필요
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 목적 섹션 -->
+        <div class="section purpose-section">
+            <div class="section-header">
+                <div class="section-icon">🚀</div>
+                <div class="section-title">목적</div>
+            </div>
+            
+            <div class="purpose-content">
+                <div class="purpose-main">
+                    <span class="green-highlight">생성형 AI 기반 해양수산 특화 인과성 지식그래프</span> 지식체계를 구축하여<br>
+                    다음 3가지 핵심 목표를 실현
+                </div>
+                
+                <div class="purpose-goals">
+                    <div class="purpose-goal">
+                        <div class="goal-number">1</div>
+                        <div class="goal-text">
+                            조수재난의<br>
+                            <strong>조기·고정밀 예측</strong>과<br>
+                            상황별 대응시나리오<br>
+                            자동 생성
+                        </div>
+                    </div>
+                    
+                    <div class="purpose-goal">
+                        <div class="goal-number">2</div>
+                        <div class="goal-text">
+                            해상운송<br>
+                            <strong>탄소배출·연료·물류비용</strong><br>
+                            실시간 예측·최적화
+                        </div>
+                    </div>
+                    
+                    <div class="purpose-goal">
+                        <div class="goal-number">3</div>
+                        <div class="goal-text">
+                            <strong>X-이벤트</strong><br>
+                            (전쟁·운하폐쇄 등)<br>
+                            발생 시 1시간 내<br>
+                            대체경로 제시
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- SLIDES_NAV_BEGIN -->
+<script>
+(function () {
+  try {
+    const slides = [
+      "01.html",
+      "02.html",
+      "03.html",
+      "04.html",
+      "05.html",
+      "06.html",
+      "07.html",
+      "08.html",
+      "09.html",
+      "10.html",
+      "11.html",
+      "12.html",
+      "13.html",
+      "14.html",
+      "15.html",
+      "16.html",
+      "17.html",
+      "18.html",
+      "19.html",
+      "20.html",
+      "21.html",
+      "22.html",
+      "23.html",
+      "24.html",
+      "25.html",
+      "26.html",
+      "27.html",
+      "28.html",
+      "29.html",
+      "30.html"
+    ];
+
+    const current = decodeURIComponent(window.location.pathname.split('/').pop() || '');
+    // NFC 매칭
+    const toNFC = s => (String.prototype.normalize ? s.normalize('NFC') : s);
+    const slidesN = slides.map(toNFC);
+    let idx = slidesN.indexOf(toNFC(current));
+
+    // 못 찾았을 때도 UX 안전하게 0으로 보정
+    if (idx < 0) idx = 0;
+
+    function go(i) {
+      const target = slides[(i + slides.length) % slides.length];
+      if (target) window.location.href = target;
+    }
+    function next() { go(idx + 1); }
+    function prev() { go(idx - 1); }
+
+    window.addEventListener('keydown', function (e) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      const editable = e.target && (e.target.isContentEditable || ['input','textarea','select'].includes(tag));
+      if (editable) return;
+
+      if (['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+      else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    }, true);
+
+    document.addEventListener('click', function (e) {
+      const interactive = e.target.closest && e.target.closest('a,button,input,textarea,select,video,audio,label,svg');
+      if (!interactive) next();
+    });
+
+    const hud = document.createElement('div');
+    hud.setAttribute('data-slide-hud', '1');
+    Object.assign(hud.style, {
+      position: 'fixed', right: '16px', bottom: '12px',
+      padding: '6px 10px', fontSize: '13px', lineHeight: '1.2',
+      borderRadius: '10px', background: 'rgba(0,0,0,0.35)', color: '#fff',
+      backdropFilter: 'blur(3px)', zIndex: 9999, userSelect: 'none', pointerEvents: 'none'
+    });
+    hud.textContent = ((idx + 1) + ' / ' + slides.length) + '  •  ← / → 또는 클릭';
+    document.body.appendChild(hud);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = slides[(idx + 1) % slides.length];
+    document.head.appendChild(link);
+
+  } catch (err) {
+    console && console.warn && console.warn('Slide nav error:', err);
+  }
+})();
+</script>
+<!-- SLIDES_NAV_END -->
+</body>
+</html>
